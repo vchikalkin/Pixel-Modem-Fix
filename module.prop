@@ -1,6 +1,6 @@
-id=5G_enabler
-name=Universal Modem Fix for 5G enable on Pixel Tensor
+id=pixel-mdm-fix
+name=Universal Modem Fix for Pixel Tensor
 version=1.0
 versionCode=1
-author=daradan
+author=vchikalkin
 description=Fix LTE limitations on non-certified (CIS) networks for Google Tensor devices.

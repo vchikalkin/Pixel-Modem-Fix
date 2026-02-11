@@ -12,16 +12,26 @@ rm -f $MODPATH/system/vendor/firmware/carrierconfig/cfg.db || abort "Failed to d
 chmod +x $MODPATH/tools/sqlite3 || abort "Failed to change chmod to +x for sqlite3!"
 cp -a /vendor/firmware/carrierconfig/cfg.db $MODPATH/system/vendor/firmware/carrierconfig/ || abort "Failed to copy cfg.db!"
 SQL="
--- Находим confman для it_iliad (carrier_id = 2124)
-WITH target_confman AS (
-    SELECT confman FROM confmap WHERE carrier_id = (
-        SELECT carrier_id FROM confnames WHERE name = 'it_iliad'
+-- Обновляем 0 и 20001
+UPDATE confmap
+SET confman = (
+    SELECT confman FROM confmap
+    WHERE carrier_id = (
+        SELECT carrier_id FROM confnames WHERE name='it_iliad'
     )
 )
--- Обновляем конфигурации для WILDCARD (0), PTCRB (20001), и PTCRB_ROW (20005)
-UPDATE confmap
-SET confman = (SELECT confman FROM target_confman)
 WHERE carrier_id IN ('0', '20001', '20005');
+
+-- Добавляем 20005, если её нет
+INSERT OR IGNORE INTO confmap (carrier_id, confman)
+VALUES (
+    '20005',
+    (SELECT confman FROM confmap
+     WHERE carrier_id = (
+         SELECT carrier_id FROM confnames WHERE name='it_iliad'
+     )
+    )
+);
 "
 $MODPATH/tools/sqlite3 $MODPATH/system/vendor/firmware/carrierconfig/cfg.db "$SQL" || abort "Failed to patch cfg.db!"
 rm -f $MODPATH/tools/sqlite3 || abort "Failed to delete sqlite3!"
