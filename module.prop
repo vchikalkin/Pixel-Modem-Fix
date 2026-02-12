@@ -1,6 +1,6 @@
 id=pixel-mdm-fix
 name=Universal Modem Fix for Pixel Tensor
-version=1.0
+version=1.1
 versionCode=1
 author=vchikalkin
 description=Fix LTE limitations on non-certified (CIS) networks for Google Tensor devices.
